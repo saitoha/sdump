@@ -1,8 +1,8 @@
 #CC ?= gcc
 CC ?= clang
 
-CFLAGS  = -Wall -Wextra -std=c99 -pedantic \
--g -Og -rdynamic -pipe \
+CFLAGS ?= -Wall -Wextra -std=c99 -pedantic \
+-g -rdynamic -pipe \
 -I./libsixel-normalize-depth -I./libsixel-normalize-depth/include
 #-march=native -Ofast -flto -pipe -s
 #-O3 -pipe -s 
@@ -24,13 +24,13 @@ all:  $(DST)
 
 sdump: $(SRC) $(HDR)
 	$(CC) -I./libsixel-normalize-depth -I./libsixel-normalize-depth/include \
-		-g -Og -rdynamic -c $(SIXEL_SRC)
+		-g -rdynamic -c $(SIXEL_SRC)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(SIXEL_OBJ) $(SRC) -o $@
 	rm -f *.o
 
 16bpp_test: 16bpp_test.c libnsgif.c libnsbmp.c $(HDR)
 	$(CC) -I./libsixel-normalize-depth -I./libsixel-normalize-depth/include \
-		-g -Og -rdynamic -c $(SIXEL_SRC)
+		-g -rdynamic -c $(SIXEL_SRC)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(SIXEL_OBJ) 16bpp_test.c libnsgif.c libnsbmp.c -o $@
 	rm -f *.o
 
