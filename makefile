@@ -7,6 +7,7 @@ CFLAGS ?= -Wall -Wextra -std=c99 -pedantic \
 #-march=native -Ofast -flto -pipe -s
 #-O3 -pipe -s 
 LDFLAGS = -ljpeg -lpng -lsixel
+LIBSIXEL_CONFIG_H = libsixel-normalize-depth/config.h
 
 HDR = stb_image.h libnsgif.h libnsbmp.h \
 	sdump.h util.h loader.h image.h sixel_util.h
@@ -22,13 +23,16 @@ DST = sdump
 
 all:  $(DST)
 
-sdump: $(SRC) $(HDR)
+$(LIBSIXEL_CONFIG_H):
+	cd libsixel-normalize-depth && ./configure
+
+sdump: $(SRC) $(HDR) $(LIBSIXEL_CONFIG_H)
 	$(CC) -I./libsixel-normalize-depth -I./libsixel-normalize-depth/include \
 		-g -rdynamic -c $(SIXEL_SRC)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(SIXEL_OBJ) $(SRC) -o $@
 	rm -f *.o
 
-16bpp_test: 16bpp_test.c libnsgif.c libnsbmp.c $(HDR)
+16bpp_test: 16bpp_test.c libnsgif.c libnsbmp.c $(HDR) $(LIBSIXEL_CONFIG_H)
 	$(CC) -I./libsixel-normalize-depth -I./libsixel-normalize-depth/include \
 		-g -rdynamic -c $(SIXEL_SRC)
 	$(CC) $(CFLAGS) $(LDFLAGS) $(SIXEL_OBJ) 16bpp_test.c libnsgif.c libnsbmp.c -o $@
